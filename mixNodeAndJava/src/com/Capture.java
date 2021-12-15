@@ -4,13 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import jpcap.JpcapCaptor;
 import jpcap.NetworkInterface;
 import jpcap.PacketReceiver;
-import jpcap.packet.Packet;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import com.alibaba.fastjson.JSON;
-
+import java.io.IOException;;
 
 public class Capture {
 	public static final NetworkInterface[] devices = JpcapCaptor.getDeviceList();
@@ -18,14 +12,21 @@ public class Capture {
 	public static JpcapCaptor jpcapCaptor;
 	//public static
 	public static void main(String[] args) {
+		Capture.startCapture();
+		Capture.stopCapture();
+		//System.out.println(Capture.getCpatureInfo());
+		System.out.println(NetFetcher.getInfoArr());
 	}
 	public static void startCapture() {
 		try {
 	    	 jpcapCaptor = JpcapCaptor.openDevice(devices[0], 2000, false, 20);
-	    	 jpcapCaptor.loopPacket(10, new NetFetcher());
-	    	 //breakLoop
+	    	 
+	    	 //System.out.println(JSON.toJSONString(devices[0]));
+	    	 jpcapCaptor.setFilter("ip", true);
+	    	 //IPPacket ip = (IPPacket) jpcapCaptor.getPacket();
+	    	 
+	    	 jpcapCaptor.loopPacket(10, new NetFetcher("ip"));
 	     } catch (IOException e) {
-	    	 // TODO Auto-generated catch block
 	    	 e.printStackTrace();
 	     }
 	}
@@ -38,24 +39,28 @@ public class Capture {
 }
 
 
-class NetFetcher implements PacketReceiver{
-	public static ArrayList<String> arrayList = new ArrayList<>();
-	public static int j = 0; 
-	@Override
-	public void receivePacket(Packet arg0) {
-		String jsonObject = JSON.toJSONString(arg0);
-		//infoArr[j] = jsonObject;
-		arrayList.add(jsonObject);
-		//j++;
-		//System.out.println(arrayList);
-		//System.out.println(arg0);
-	}
-	public static String[] getInfoArr() {
-		int len = arrayList.size();
-		String infoArr[] = new String[len];
-		for(int i = 0; i < len; i++) {
-			infoArr[i] = arrayList.get(i);
-		}
-		return infoArr;
-	}
-}
+//class NetFetcher implements PacketReceiver{
+//	public static ArrayList<String> arrayList = new ArrayList<>();
+//	public static int j = 0; 
+//	public static String packetType = "";
+//	public NetFetcher(String type) {
+//		NetFetcher.packetType = type;
+//	}
+//	@Override
+//	public void receivePacket(Packet arg0) {
+//		IPPacket ip = (IPPacket) arg0;
+//		//System.out.println(JSON.toJSONString(ip));
+//		System.out.println(JSON.toJSON(arg0));
+//		System.out.println(ip.protocol);
+//		String jsonObject = JSON.toJSONString(arg0);
+//		arrayList.add(jsonObject);
+//	}
+//	public static String[] getInfoArr() {
+//		int len = arrayList.size();
+//		String infoArr[] = new String[len];
+//		for(int i = 0; i < len; i++) {
+//			infoArr[i] = arrayList.get(i);
+//		}
+//		return infoArr;
+//	}
+//}
