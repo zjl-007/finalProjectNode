@@ -9,12 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.19.1",
     "cookie-parser": "^1.4.6",
+    "crypto": "^1.0.1",
     "express": "^4.17.1",
     "java": "^0.12.2",
+    "jsonwebtoken": "^8.5.1",
     "loadsh": "0.0.4",
     "multer": "^1.4.4",
+    "mysql": "^2.18.1",
     "node-java-maven": "^0.1.1",
     "when": "^3.7.8"
   }
