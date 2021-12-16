@@ -5,7 +5,7 @@ var app = http();
 const myclass = require('./runMyClass')
 console.log(myclass);
 const main = require("./main/index");
-const setHeader = require("./router/setHeader")
+const setHeader = require("./main/config/setHeader")
 
 setHeader(app);
 /**

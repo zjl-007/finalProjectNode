@@ -1,5 +1,5 @@
-const login = require('../router/login')
-const setHeader = require('../router/setHeader.js')
+const login = require('./router/login')
+const setHeader = require('./config/setHeader')
 const useConfig = require('./config/useConfig')
 
 require('./db/mysqlConn')

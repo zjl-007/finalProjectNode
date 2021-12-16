@@ -1,5 +1,5 @@
-const connection = require('../main/db/mysqlConn');
-const Jwt = require("../main/config/token")
+const connection = require('../db/mysqlConn');
+const Jwt = require("../config/token")
 module.exports = (app) => {
     app.post('/login', (req, res) => {
         const { username, password } = req.body;
