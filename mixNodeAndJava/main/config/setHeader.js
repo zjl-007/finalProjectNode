@@ -1,7 +1,6 @@
 const Jwt = require('./token')
-const queryUserInfo = require('../db/queryUserInfo')
 module.exports = (app) => {
-    app.all('*', function (req, res, next) {
+    app.all('*', async function (req, res, next) {
         console.log("all 请求----------", req.params, req.body, req.path, req.method);
         if (req.path !== '/login') {
             let token = req.headers.authorization;
@@ -9,7 +8,7 @@ module.exports = (app) => {
                 console.log('no token')
                 res.send({
                     data: {
-                        code: 500,
+                        code: 501,
                         message: '用户未登录,请重新登录！'
                     },
                 })
@@ -18,15 +17,25 @@ module.exports = (app) => {
                 let jwt = new Jwt();
                 let result = jwt.checkToken(token);
                 if (result instanceof Error) {
-                    res.send({
-                        data: {
-                            code: 500,
-                            message: '身份认证失败,请重新登录！'
-                        }
-                    })
+                    if (result.name == 'TokenExpiredError') {//token过期
+                        res.send({
+                            data: {
+                                code: 501,
+                                message: 'token过期,请重新登录！',
+                                result
+                            }
+                        })
+                    } else if (result.name == 'JsonWebTokenError') {//无效的token
+                        res.send({
+                            data: {
+                                code: 501,
+                                message: '无效的token,请重新登录！',
+                                result
+                            }
+                        })
+                    }
                     return
                 }
-                console.log(queryUserInfo({username: 'admin'}))
             }
         }
         res.setHeader('Access-Control-Allow-Origin', '*');

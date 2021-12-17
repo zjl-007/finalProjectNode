@@ -16,7 +16,8 @@ module.exports = (app) => {
         // let sql = 'SELECT username FROM users';
         let sql = `SELECT * FROM users WHERE username='${username}'`
         connection.query(sql, (err, result) => {
-            if (err || !result.length) {
+            console.log(result);
+            if (err || !result.length || (result[0].password != password)) {
                 res.send({
                     data: {
                         code: 500,
@@ -26,11 +27,12 @@ module.exports = (app) => {
                 return
             }
             console.log(result)
-            let jwt = new Jwt(String(result[0].idusers));
+            let jwt = new Jwt(String(result[0].idusers) + String(result[0].username));
             let token = jwt.createdToken();
             res.send({
                 data: {
                     token: token || '',
+                    id: result[0].idusers,
                     code: 200,
                     message: '登录成功',
                 },

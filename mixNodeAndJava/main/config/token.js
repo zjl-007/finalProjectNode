@@ -33,8 +33,7 @@ class Jwt {
                 res = result.data || {};
             }
         } catch(e) {
-            res =  new Error('认证失败');
-            res = e;
+            res =  e;
         }
         return res;
     }

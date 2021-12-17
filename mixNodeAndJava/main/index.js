@@ -1,4 +1,5 @@
 const login = require('./router/login')
+const home = require('./router/home')
 const setHeader = require('./config/setHeader')
 const useConfig = require('./config/useConfig')
 
@@ -9,11 +10,18 @@ module.exports = (app) => {
      */
     useConfig(app);
 
+
+    /**
+     * app setHeader
+     */
+    setHeader(app);
+
+    
     /**
      * app router begin
      * 
      */
     login(app);
-    setHeader(app);
+    home(app);
 
 }
