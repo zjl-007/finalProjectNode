@@ -24,12 +24,24 @@ module.exports = (app) => {
     })
     app.post('/getMenus', async (req, res) => {
         let id = req?.body?.id;
-        const { code, menuList } = await queryMenu(id);
-        console.log(menuList)
+        const { userInfo } = await queryUserInfo(id);
+        if (!id || !userInfo.length) {
+            res.send({
+                data: {
+                    data: {},
+                    code: 500,
+                    message: '用户信息有误！'
+                },
+            });
+            return
+        }
+        let menuid = userInfo[0].menuid;
+        const { code, status, menuList, message } = await queryMenu(menuid);
         res.send({
             data: {
-                code,
-                menuList
+                code: status,
+                menuList,
+                message
             }
         });
     })
