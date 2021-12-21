@@ -4,13 +4,13 @@ module.exports = (app) => {
     app.post('/login', (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) {
-            res.status(500)
             res.send({
                 data: {
                     code: 500,
                     message: "登录失败,请输入账号或密码!",
                 },
             });
+            return
         }
 
         // let sql = 'SELECT username FROM users';

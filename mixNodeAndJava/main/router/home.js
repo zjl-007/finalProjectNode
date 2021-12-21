@@ -1,7 +1,7 @@
 const queryUserInfo = require('../db/queryUserInfo')
 const queryMenu = require('../db/queryMenu')
 module.exports = (app) => {
-    app.post('/getUserInfo', async (req, res) => {
+    app.post('/getNowUserInfo', async (req, res) => {
         let id = req?.body?.id;
         const { code, userInfo } = await queryUserInfo(id);
         if (!id || !code) {
