@@ -8,5 +8,7 @@ java.classpath.push('../lib/jpcap.jar');
 //let MyClass = java.import("com.cn.test.PathToTree");
 
 let MyClass = java.import("com.PathToTree");
+// let MyClass = java.import("com.main");
+
 //let res = MyClass.showJPSync();
 module.exports = MyClass;
