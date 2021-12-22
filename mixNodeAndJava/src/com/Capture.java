@@ -4,7 +4,9 @@ import jpcap.JpcapCaptor;
 import jpcap.NetworkInterface;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;;
 
 public class Capture {
 	public static final NetworkInterface[] devices = JpcapCaptor.getDeviceList();
@@ -13,9 +15,6 @@ public class Capture {
 	//public static
 	public static void main(String[] args) {
 //		Capture.startCapture(10);
-//		Capture.stopCapture();
-//		System.out.println(NetFetcher.getInfoArr());
-		System.out.println(Capture.getDevicesInfo() + "");
 	}
 	public static void startCapture(int count) {
 		try {
@@ -33,7 +32,15 @@ public class Capture {
 		return NetFetcher.getInfoArr();
 	}
 	
-	public static String getDevicesInfo() {
-		return NetFetcher.devices() + "";
+	public static String[] getDevicesInfo() {
+		List<Map<String, Object>> list = NetFetcher.devices();
+		int len = NetFetcher.devices().size();
+		String infoArr[] = new String[len];
+		for(int i = 0; i < len; i++) {
+//			infoArr[i] = list.get(i).toString();
+			infoArr[i] = JSON.toJSONString(list.get(i));
+		}
+		list.clear();
+		return infoArr;
 	}
 }

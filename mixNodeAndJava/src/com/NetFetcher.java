@@ -52,9 +52,13 @@ class NetFetcher implements PacketReceiver{
                     if(j == 0) {
                         networkCardMap.put("netcd_Iipv6", addresses[j].address.toString());   //ipv6
                     } else if(j == 1) {
-                        networkCardMap.put("netcd_ipv4", addresses[j].address.toString()); //ipv4
-                        networkCardMap.put("netcd_broadcast", addresses[j].broadcast.toString()); //广播
-                        networkCardMap.put("netcd_subnet", addresses[j].subnet.toString()); //子网掩码
+                    	if(JSON.toJSONString(addresses[j]).contains("broadcast")) {
+                            networkCardMap.put("netcd_ipv4", addresses[j].address.toString()); //ipv4
+                            networkCardMap.put("netcd_broadcast", addresses[j].broadcast.toString()); //广播
+                            networkCardMap.put("netcd_subnet", addresses[j].subnet.toString()); //子网掩码
+                    	} else {
+                    		networkCardMap.put("netcd_Iipv6", addresses[j].address.toString());   //ipv6
+                    	}
                     }
                 }
                 int length = devices[i].mac_address.length;  
@@ -68,12 +72,14 @@ class NetFetcher implements PacketReceiver{
                 networkCardMap.put("netcd_mac", sb.toString());   //mac地址
                 //把所有的设备信息存入到
                 networkCardMap.put("dev", devices[i]);
+                System.out.println(JSON.toJSON(networkCardMap));
                 list.add(networkCardMap);
             }
             return list;
         }catch(Exception e){
             e.printStackTrace();
         }
+        System.out.println(JSON.toJSONString(list));
         return list;
     }
     
@@ -169,7 +175,9 @@ class NetFetcher implements PacketReceiver{
 //            }
 //        }
 	}
-	
+	/*
+	 * 数据包信息
+	 */
 	public static String[] getInfoArr() {
 		int len = arrayList.size();
 		String infoArr[] = new String[len];

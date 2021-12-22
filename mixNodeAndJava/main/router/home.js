@@ -41,7 +41,8 @@ module.exports = (app) => {
             data: {
                 code: status,
                 menuList,
-                message
+                message,
+                info: 'menus',
             }
         });
     })
