@@ -2,8 +2,9 @@ const Capture = require("../../runMyClass");
 
 module.exports = (app) => {
   app.post('/startCapture', (req, res) => {
-    Capture.startCaptureSync(30);
-    res.send('start');
+    let message = Capture.startCaptureSync(-1);
+    console.log(message);
+    res.send(message);
   })  
   app.post('/stopCapture', (req, res) => {
     Capture.stopCaptureSync();

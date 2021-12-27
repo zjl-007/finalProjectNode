@@ -26,9 +26,14 @@ class NetFetcher implements PacketReceiver{
 	public String[] egpInfoArr;		//egp数据包数组
 	public String[] updInfoArr;		//udp数据包数组
 	
+	public static Boolean isCaptureing = false;    //判断是否在抓包
+	public static int currentPack = 0;			//计算当前抓包数
+	public int totalPack;			//应当抓包数目
+	
 	public static Map<String, String> infoMap;
-	public NetFetcher(String type) {
+	public NetFetcher(String type, int packCount) {
 		NetFetcher.packetType = type;
+		this.totalPack = packCount;
 	}
 	
 	public static List<Map<String, Object>> list = new ArrayList<>();
@@ -85,33 +90,22 @@ class NetFetcher implements PacketReceiver{
     
 	@Override
 	public void receivePacket(Packet packet) {
-//		if(NetFetcher.packetType == "" ) {
-//			arrayList.add(JSON.toJSONString(arg0));
-//		} else if (NetFetcher.packetType == "ip") {
-//			IPPacket ip = (IPPacket) arg0;
-//			int protocolNum = ip.protocol;
-//			switch(protocolNum) {
-//				case 1: {
-//						icmp = (ICMPPacket) ip;
-//						
-//						break;
-//					}
-//				case 17: udp = (UDPPacket) ip;break;
-//			};
-//			System.out.println(icmp);
-//
-//			System.out.println(JSON.toJSONString(udp));
-//			//System.out.println(ip.protocol);
-//			if(ip.protocol == 17) {
-//				System.out.println(JSON.toJSONString(ip));
-//			}
-//			arrayList.add(JSON.toJSONString(ip));
-//		} else if (NetFetcher.packetType == "icmp") {
-//			ICMPPacket icmp = (ICMPPacket) arg0;
-//			System.out.println(JSON.toJSONString(icmp));
-//		}
-//		System.out.println(JSON.toJSONString(arg0));
-		
+		if(this.totalPack == 0) {
+			Capture.jpcapCaptor.breakLoop();
+			return;
+		}
+		if(this.totalPack == -1) {
+			NetFetcher.isCaptureing = true;
+//			Capture.jpcapCaptor.breakLoop();
+		} else {
+			if(NetFetcher.currentPack < this.totalPack) {
+				NetFetcher.isCaptureing = true;
+				NetFetcher.currentPack++;
+			}else {
+				NetFetcher.currentPack = 0;
+				NetFetcher.isCaptureing = false;
+			}
+		}
 		
 		infoMap = new HashMap<>();
         //分析协议类型
@@ -164,6 +158,8 @@ class NetFetcher implements PacketReceiver{
             infoMap.put("TargetMacAddr", getMacInfo(datalink.dst_mac));
         }
         arrayList.add(JSON.toJSONString(infoMap));
+        System.out.print("抓包数据");
+        System.out.println(JSON.toJSONString(infoMap));
 //        try {
 //            CatchDataToCache catchDataToCache = new CatchDataToCacheImpl();
 //            catchDataToCache.setInfoToCache(infoMap);
@@ -186,6 +182,8 @@ class NetFetcher implements PacketReceiver{
 			infoArr[i] = arrayList.get(i);
 		}
 		arrayList.clear();
+		NetFetcher.isCaptureing = false;
+		NetFetcher.currentPack = 0;
 		return infoArr;
 	}
 	

@@ -12,22 +12,37 @@ import jpcap.JpcapCaptor;
 import jpcap.NetworkInterface;   
 import com.alibaba.fastjson.JSON;
 public class PathToTree {
+	public static Capture capture = new Capture();
+	public static Thread captureThread =  null;
 	public static void main(String[] args) {
 		System.out.println("ok`````");
-//		String [] l = PathToTree.getDevicesInfo();
-//		System.out.println(JSON.toJSONString(l));
+    }
+	
+	
+	public static String startCapture(int count) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+            	capture.startCapture(count);
+            }
+        };
+        captureThread = new Thread(runnable);
+		if(NetFetcher.isCaptureing) {
+			return "正在抓包中,请勿重复抓包！";
+		}
+        captureThread.start();
+        return "开始抓包";
 	}
-	public static void startCapture(int count) {
-		Capture.startCapture(count);
-	}
+	
 	public static void stopCapture() {
-		Capture.stopCapture();
+		capture.stopCapture(captureThread);
 	}
+	
 	public static String[] getCaptureResult() {
-		return Capture.getCpatureInfo();
+		return capture.getCpatureInfo();
 	}
 	public static String[] getDevicesInfo() {
-		return Capture.getDevicesInfo();
+		return capture.getDevicesInfo();
 	}
 }
 	
