@@ -27,7 +27,7 @@ module.exports = (app) => {
                 return
             }
             console.log(result)
-            let jwt = new Jwt(String(result[0].idusers) + String(result[0].username));
+            let jwt = new Jwt(String(result[0].idusers) + 'and' + String(result[0].username));
             let token = jwt.createdToken();
             res.send({
                 data: {

@@ -17,7 +17,7 @@ class Jwt {
         let created = Math.floor(Date.now() / 1000);
         let token = jwt.sign({
             data,
-            exp: created + 60 * 30,
+            exp: created + 60 * 60 * 24,
         }, 'secret')
         return token
     }
