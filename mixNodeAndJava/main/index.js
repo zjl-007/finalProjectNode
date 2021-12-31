@@ -7,6 +7,7 @@ const login = require('./router/login')
 const home = require('./router/home')
 const capture = require('./router/capture')
 const devices = require('./router/devices')
+const controlData = require('./router/controlData')
 
 module.exports = (app) => {
     /**
@@ -30,4 +31,5 @@ module.exports = (app) => {
     sys(app);
     capture(app);
     devices(app);
+    controlData(app);
 }
