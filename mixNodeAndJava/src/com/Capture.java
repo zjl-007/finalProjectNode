@@ -11,21 +11,25 @@ import com.alibaba.fastjson.JSON;;
 public class Capture {
 	public static final NetworkInterface[] devices = JpcapCaptor.getDeviceList();
 	public static NetworkInterface[] arr = new NetworkInterface[devices.length];
-	public static JpcapCaptor jpcapCaptor;
-	//public static
+	public static JpcapCaptor jpcapCaptor = null;
+	public NetFetcher netfetcher = new NetFetcher(10);
 	public static void main(String[] args) {
 //		Capture.startCapture(10);
 	}
-	
-	public void startCapture(int count) {
+	public Capture() {
+		
+	}
+	public void startCapture(int index, int count, String content)  {
+		NetFetcher.arrayList.clear();   //抓包之前先清空上次抓的数据
+		System.out.println("网卡：" + index + ";抓包数量：" + count + ";抓包条件：" + content);
 		try {
 			NetFetcher.isCaptureing = true;
-	    	 jpcapCaptor = JpcapCaptor.openDevice(devices[0], 2000, false, 20);
-	    	 jpcapCaptor.setFilter("ip", true);
+	    	 jpcapCaptor = JpcapCaptor.openDevice(devices[index], 2000, false, 20);
+	    	 jpcapCaptor.setFilter(content, true);
 //	    	 jpcapCaptor.setFilter("dst host 192.168.1.126", true);
 //	    	 jpcapCaptor.setFilter("ip and tcp and dst port 80", true);
-	    	 jpcapCaptor.loopPacket(count, new NetFetcher("ip", count));
-	         System.out.println(NetFetcher.isCaptureing);
+	    	 netfetcher = new NetFetcher(count);
+	    	 jpcapCaptor.loopPacket(count, netfetcher);
 	     } catch (IOException e) {
 	    	 e.printStackTrace();
 	 		NetFetcher.isCaptureing = false;
@@ -38,12 +42,15 @@ public class Capture {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		if(Capture.jpcapCaptor == null) {
+			return;
+		}
 		Capture.jpcapCaptor.close();
 		NetFetcher.isCaptureing = false;
 		NetFetcher.currentPack = 0;
 	}
 	public String[] getCpatureInfo() {
-		return NetFetcher.getInfoArr();
+		return netfetcher.getInfoArr();
 	}
 	
 	public String[] getDevicesInfo() {

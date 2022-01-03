@@ -2,7 +2,6 @@ const Capture = require("../../runMyClass");
 
 module.exports = (app) => {
   app.post('/getDevices', (req, res) => {
-    console.log('getDevices')
     try {
       let devices = Capture.getDevicesInfoSync();
       let x;

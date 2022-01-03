@@ -1,35 +1,39 @@
 package com;
 
-//package com.cn.test;
-
-import java.io.IOException;
-import jpcap.PacketReceiver;
-import jpcap.packet.Packet;
-import java.util.ArrayList;
-import java.util.List;
-import com.alibaba.fastjson.JSONObject;
-import jpcap.JpcapCaptor;
-import jpcap.NetworkInterface;   
 import com.alibaba.fastjson.JSON;
+
+//package com.cn.test;
 public class PathToTree {
 	public static Capture capture = new Capture();
 	public static Thread captureThread =  null;
 	public static void main(String[] args) {
 		System.out.println("ok`````");
+//		PathToTree.startCapture(0, -1, "ip");
+//		String[] res = PathToTree.getCaptureResult();
+//		while(res.length <= 20) {
+//			res = PathToTree.getCaptureResult();
+//			System.out.println(res.length);
+//		}
+//		PathToTree.stopCapture();
+////		System.out.println(res);
+//		
+//		System.out.println(PathToTree.getCaptureResult());
     }
 	
-	
-	public static String startCapture(int count) {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-            	capture.startCapture(count);
-            }
-        };
-        captureThread = new Thread(runnable);
+	public static boolean getCaptureState() {
+		return NetFetcher.isCaptureing;
+	}
+	public static String startCapture(int index, int count, String content) {
 		if(NetFetcher.isCaptureing) {
 			return "正在抓包中,请勿重复抓包！";
 		}
+		Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+				capture.startCapture(index, count, content);
+            }
+        };
+        captureThread = new Thread(runnable);
         captureThread.start();
         return "开始抓包";
 	}

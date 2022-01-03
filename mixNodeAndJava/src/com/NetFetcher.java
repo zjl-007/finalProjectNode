@@ -15,7 +15,6 @@ import jpcap.packet.*;
 import jpcap.packet.Packet;
 
 class NetFetcher implements PacketReceiver{
-	public static String packetType = "";
 	public static ArrayList<String> arrayList = new ArrayList<>();
 	
 	public ICMPPacket icmp = null;
@@ -28,12 +27,11 @@ class NetFetcher implements PacketReceiver{
 	
 	public static Boolean isCaptureing = false;    //判断是否在抓包
 	public static int currentPack = 0;			//计算当前抓包数
-	public int totalPack;			//应当抓包数目
+	public static int totalPack;			//应当抓包数目
 	
 	public static Map<String, String> infoMap;
-	public NetFetcher(String type, int packCount) {
-		NetFetcher.packetType = type;
-		this.totalPack = packCount;
+	public NetFetcher(int packCount) {
+		NetFetcher.totalPack = packCount;
 	}
 	
 	public static List<Map<String, Object>> list = new ArrayList<>();
@@ -90,15 +88,15 @@ class NetFetcher implements PacketReceiver{
     
 	@Override
 	public void receivePacket(Packet packet) {
-		if(this.totalPack == 0) {
+		if(NetFetcher.totalPack == 0) {
 			Capture.jpcapCaptor.breakLoop();
 			return;
 		}
-		if(this.totalPack == -1) {
+		if(NetFetcher.totalPack == -1) {
 			NetFetcher.isCaptureing = true;
 //			Capture.jpcapCaptor.breakLoop();
 		} else {
-			if(NetFetcher.currentPack < this.totalPack) {
+			if(NetFetcher.currentPack < NetFetcher.totalPack) {
 				NetFetcher.isCaptureing = true;
 				NetFetcher.currentPack++;
 			}else {
@@ -152,9 +150,11 @@ class NetFetcher implements PacketReceiver{
             infoMap.put("Caplen", String.valueOf(icmpPacket.caplen));
             infoMap.put("SecTime", String.valueOf(icmpPacket.sec));
             infoMap.put("SourceIp", icmpPacket.src_ip.getHostAddress());
+            infoMap.put("SourcePort", String.valueOf("无端口号"));
             
             infoMap.put("SourceMacAddr", getMacInfo(datalink.src_mac));
             infoMap.put("TargetIp", icmpPacket.dst_ip.getHostAddress());
+            infoMap.put("TargetPort", String.valueOf("无端口号"));
             infoMap.put("TargetMacAddr", getMacInfo(datalink.dst_mac));
         }
         arrayList.add(JSON.toJSONString(infoMap));
@@ -174,14 +174,18 @@ class NetFetcher implements PacketReceiver{
 	/*
 	 * 数据包信息
 	 */
-	public static String[] getInfoArr() {
+	public String[] getInfoArr() {
 		int len = arrayList.size();
 		String infoArr[] = new String[len];
 		for(int i = 0; i < len; i++) {
-			System.out.println(arrayList.get(i));
 			infoArr[i] = arrayList.get(i);
 		}
-		arrayList.clear();
+//		if(NetFetcher.totalPack != -1) {
+//			arrayList.clear();
+//		}
+//		System.out.println(JSON.toJSONString(arrayList));
+//		System.out.println("arraylist长度：" + arrayList.size());
+//		System.out.println(JSON.toJSONString(arrayList));
 		NetFetcher.isCaptureing = false;
 		NetFetcher.currentPack = 0;
 		return infoArr;

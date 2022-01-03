@@ -42,7 +42,7 @@ function delUserData(idusers) {
     sql = `DELETE FROM historydata where idusers=${idusers}`;
     connection.query(sql, (err, result) => {
       if (err) resolve({ code: 0, message: '数据删除失败', data: err });  //0未查到
-      return resolve({ code: 1, message: '数据删除成功', data: result });   //1查到
+      return resolve({ code: 1, message: '数据删除成功' });   //1查到
     })
   })
 }
