@@ -1,5 +1,6 @@
 const queryUserInfo = require('../db/queryUserInfo')
 const queryMenu = require('../db/queryMenu')
+const {toUserInfo} = require('../util/tokenToUserInfo')
 module.exports = (app) => {
     app.post('/getNowUserInfo', async (req, res) => {
         let id = req?.body?.id;
@@ -36,7 +37,8 @@ module.exports = (app) => {
             return
         }
         let menuid = userInfo[0].menuid;
-        const { code, status, menuList, message } = await queryMenu(menuid);
+        let role = userInfo[0].role;
+        const { code, status, menuList, message } = await queryMenu(menuid, role);
         res.send({
             data: {
                 code: status,
