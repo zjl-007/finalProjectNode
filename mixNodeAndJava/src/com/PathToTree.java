@@ -8,7 +8,7 @@ public class PathToTree {
 	public static Thread captureThread =  null;
 	public static void main(String[] args) {
 		System.out.println("ok`````");
-//		PathToTree.startCapture(0, -1, "ip");
+//		PathToTree.startCapture(0, 5, "ip");
 //		String[] res = PathToTree.getCaptureResult();
 //		while(res.length <= 20) {
 //			res = PathToTree.getCaptureResult();
@@ -17,16 +17,17 @@ public class PathToTree {
 //		PathToTree.stopCapture();
 ////		System.out.println(res);
 //		
-//		System.out.println(PathToTree.getCaptureResult());
+//		System.out.println(capture.getCaptureState());
     }
 	
 	public static boolean getCaptureState() {
-		return NetFetcher.isCaptureing;
+		return capture.getCaptureState();
 	}
 	public static String startCapture(int index, int count, String content) {
 		if(NetFetcher.isCaptureing) {
 			return "正在抓包中,请勿重复抓包！";
 		}
+		NetFetcher.isCaptureing = true;
 		Runnable runnable = new Runnable() {
             @Override
             public void run() {

@@ -165,7 +165,7 @@ class NetFetcher implements PacketReceiver{
 //            catchDataToCache.setInfoToCache(infoMap);
 //        } catch (Exception e) {
 //            log.info("抓取数据装入缓存时 出现异常，请检查：" + e);
-//            jpcap.breakLoop();
+//            jpcap.brea)kLoop();
 //            if(jpcap != null) {
 //                jpcap.close();
 //            }

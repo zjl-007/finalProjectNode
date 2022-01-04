@@ -39,7 +39,8 @@ module.exports = (app) => {
     res.json({
       code: code ? 200 : 500,
       data: data,
-      message
+      message,
+      idusers
     });
   })
 }

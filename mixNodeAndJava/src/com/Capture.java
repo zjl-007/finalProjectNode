@@ -35,7 +35,9 @@ public class Capture {
 	 		NetFetcher.isCaptureing = false;
 	     }
 	}
-	
+	public boolean getCaptureState() {
+		return NetFetcher.isCaptureing;
+	}
 	public void stopCapture(Thread captureThread) {
 		try {
 			Thread.sleep(1000);
