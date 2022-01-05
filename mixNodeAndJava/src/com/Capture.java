@@ -12,7 +12,7 @@ public class Capture {
 	public static final NetworkInterface[] devices = JpcapCaptor.getDeviceList();
 	public static NetworkInterface[] arr = new NetworkInterface[devices.length];
 	public static JpcapCaptor jpcapCaptor = null;
-	public NetFetcher netfetcher = new NetFetcher(10);
+	public NetFetcher netfetcher;
 	public static void main(String[] args) {
 //		Capture.startCapture(10);
 	}
@@ -52,7 +52,7 @@ public class Capture {
 		NetFetcher.currentPack = 0;
 	}
 	public String[] getCpatureInfo() {
-		return netfetcher.getInfoArr();
+		return NetFetcher.getInfoArr();
 	}
 	
 	public String[] getDevicesInfo() {

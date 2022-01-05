@@ -34,7 +34,7 @@ function queryUserData(idusers) {
     })
   })
 }
-function delUserData(idusers) {
+function delUserAllData(idusers) {
   return new Promise((resolve) => {
     if(!idusers) {
       return resolve({ code: 0, message: '错误的用户id或id为空！', data: null})
@@ -47,11 +47,11 @@ function delUserData(idusers) {
   })
 }
 
-function delAllData(idusers) {return new Promise((resolve) => {
+function delAllHistoryData(idusers) {return new Promise((resolve) => {
   if(idusers != 110) {
     return resolve({ code: 0, message: '非超级管理员不得删除所有数据！', data: null})
   }
-  sql = `DELETE FROM historydata where idusers=*`;
+  sql = `DELETE FROM historydata`;
   connection.query(sql, (err, result) => {
       if (err) resolve({ code: 0, message: '数据删除失败', data: err });  //0未查到
       return resolve({ code: 1, message: '数据删除成功', data: result });   //1查到
@@ -59,7 +59,7 @@ function delAllData(idusers) {return new Promise((resolve) => {
   })
   
 }
-function delHistoryData(idsArr) {return new Promise((resolve) => {//批量或单条
+function delIdsHistoryData(idsArr) {return new Promise((resolve) => {//批量或单条
   if(!idsArr.length) {
     return resolve({ code: 0, message: '参数列表为空！', data: null})
   } 
@@ -79,8 +79,8 @@ function delHistoryData(idsArr) {return new Promise((resolve) => {//批量或单
 
 module.exports = {
   writeData,
-  delUserData,
-  delAllData,
+  delUserAllData,   //删除某一用户所有数据
+  delAllHistoryData,//删除所有用户数据
   queryUserData,
-  delHistoryData
+  delIdsHistoryData//根据id删除用户数据
 }
