@@ -21,7 +21,37 @@ const editUserInfo = async (idusers, data) => {
         })
     })
 }
+const delUser = async (idusers, data) => {
+    let sql;
+    return new Promise((resolve) => {
+        sql = `DELETE FROM users WHERE idusers = ${idusers}`
+        var modSqlParams = data;
+        connection.query(sql, modSqlParams, (err, result) => {
+            if (err) return resolve({ code: 0, message: '删除用户失败', data: err });   //0未查到
+            resolve({ code: 1, message: '删除用户成功', data: {} });  //1查到
+        })
+    })
+}
+const addUser = async (data) => {
+    let insertArr = ['username','password','telphone','email','description','powerlogin','powercapture','powerdb'];
+    let addData = [];
+    insertArr.forEach(item => addData.push(data[item]));
+    addData.push(1);  //status
+    addData.push(1); //role==1
+    addData.push(200); //menuid==1
+    let sql;
+    return new Promise((resolve) => {
+        sql = `INSERT INTO users(username,password,telphone,email,description,powerlogin,powercapture,powerdb,status,role,menuid) VALUES(?,?,?,?,?,?,?,?,?,?,?)`
+        var modSqlParams = addData;
+        connection.query(sql, modSqlParams, (err, result) => {
+            if (err) return resolve({ code: 0, message: '添加用户失败', data: err,});   //0未查到
+            resolve({ code: 1, message: '添加用户成功', data: {} });  //1查到
+        })
+    })
+}
 module.exports = {
     queryUserList,
-    editUserInfo
+    editUserInfo,
+    delUser,
+    addUser
 }
