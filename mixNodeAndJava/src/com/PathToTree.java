@@ -8,7 +8,7 @@ public class PathToTree {
 	public static Thread captureThread =  null;
 	public static void main(String[] args) {
 		System.out.println("ok`````");
-//		PathToTree.startCapture(0, 10, "ip");
+//		PathToTree.startCapture(0, 5, "ip");
 //		String[] res = PathToTree.getCaptureResult();
 //		while(res.length <= 20) {
 //			res = PathToTree.getCaptureResult();

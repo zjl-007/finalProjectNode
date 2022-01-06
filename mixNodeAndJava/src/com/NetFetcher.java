@@ -26,7 +26,7 @@ class NetFetcher implements PacketReceiver{
 	public String[] updInfoArr;		//udp数据包数组
 	
 	public static Boolean isCaptureing = false;    //判断是否在抓包
-	public static int currentPack = 1;			//计算当前抓包数
+	public static int currentPack = 0;			//计算当前抓包数
 	public static int totalPack;			//应当抓包数目
 	
 	public static Map<String, String> infoMap;
@@ -90,20 +90,21 @@ class NetFetcher implements PacketReceiver{
 	public void receivePacket(Packet packet) {
 		if(NetFetcher.totalPack == 0) {
 			Capture.jpcapCaptor.breakLoop();
+			NetFetcher.currentPack = 0;
+			NetFetcher.isCaptureing = false;
 			return;
 		}
 		if(NetFetcher.totalPack == -1) {
+			NetFetcher.currentPack = 0;
 			NetFetcher.isCaptureing = true;
 //			Capture.jpcapCaptor.breakLoop();
 		} else {
+			NetFetcher.currentPack++;
 			if(NetFetcher.currentPack < NetFetcher.totalPack) {
 				NetFetcher.isCaptureing = true;
-				NetFetcher.currentPack++;
 			}else {
 				NetFetcher.currentPack = 0;
 				NetFetcher.isCaptureing = false;
-//				System.out.println("NetFetcher.currentPack" + NetFetcher.currentPack);
-//				System.out.println("NetFetcher.totalPack" + NetFetcher.totalPack);
 			}
 		}
 		
@@ -162,7 +163,6 @@ class NetFetcher implements PacketReceiver{
         arrayList.add(JSON.toJSONString(infoMap));
         System.out.print("抓包数据");
         System.out.println(JSON.toJSONString(infoMap));
-        System.out.println("NetFetcher.isCaptureing" + NetFetcher.isCaptureing);
 //        try {
 //            CatchDataToCache catchDataToCache = new CatchDataToCacheImpl();
 //            catchDataToCache.setInfoToCache(infoMap);
@@ -177,7 +177,7 @@ class NetFetcher implements PacketReceiver{
 	/*
 	 * 数据包信息
 	 */
-	public static String[] getInfoArr() {
+	public String[] getInfoArr() {
 		int len = arrayList.size();
 		String infoArr[] = new String[len];
 		for(int i = 0; i < len; i++) {
@@ -186,8 +186,11 @@ class NetFetcher implements PacketReceiver{
 //		if(NetFetcher.totalPack != -1) {
 //			arrayList.clear();
 //		}
-//		NetFetcher.isCaptureing = false;
-//		NetFetcher.currentPack = 0;
+//		System.out.println(JSON.toJSONString(arrayList));
+//		System.out.println("arraylist长度：" + arrayList.size());
+//		System.out.println(JSON.toJSONString(arrayList));
+		NetFetcher.isCaptureing = false;
+		NetFetcher.currentPack = 0;
 		return infoArr;
 	}
 	
