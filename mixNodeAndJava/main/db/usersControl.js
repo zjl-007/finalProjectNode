@@ -23,8 +23,10 @@ const editUserInfo = async (idusers, data) => {
 }
 const delUser = async (idusers, data) => {
     let sql;
+    let delUserDataSql = `DELETE FROM historydata where idusers=${idusers};`;
     return new Promise((resolve) => {
-        sql = `DELETE FROM users WHERE idusers = ${idusers}`
+        sql = `DELETE FROM users WHERE idusers = ${idusers};`
+        sql = sql + delUserDataSql;
         var modSqlParams = data;
         connection.query(sql, modSqlParams, (err, result) => {
             if (err) return resolve({ code: 0, message: '删除用户失败', data: err });   //0未查到

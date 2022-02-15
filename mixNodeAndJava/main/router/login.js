@@ -12,11 +12,8 @@ module.exports = (app) => {
             });
             return
         }
-
-        // let sql = 'SELECT username FROM users';
         let sql = `SELECT * FROM users WHERE username='${username}'`
         connection.query(sql, (err, result) => {
-            console.log(result);
             if (err || !result.length || (result[0].password != password)) {
                 return res.send({
                     data: {

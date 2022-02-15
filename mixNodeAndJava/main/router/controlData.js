@@ -4,6 +4,7 @@ const {
   delUserAllData,
   delAllHistoryData,
   queryUserData,
+  queryUserChartData,
 } = require('../db/controlData')
 module.exports = (app) => {
   //批量或单条删除用户数据
@@ -45,13 +46,23 @@ module.exports = (app) => {
   })
   //获取指定用户数据
   app.post('/getUserHistory', async (req, res) => {
-    let idusers = req?.body?.idusers;
-    let {code, data, message} = await queryUserData(idusers); 
+    let searchData = req?.body || {};
+    let {code, data, message} = await queryUserData(searchData); 
     res.json({
       code: code ? 200 : 500,
       data: data,
       message,
-      idusers
+      searchData
     });
+  })
+
+  //获取历史图表页的数据
+  app.post('/getUserChartHistory', async (req, res) => {
+    let {code, data, message} = await queryUserChartData();
+    res.json({
+      code: code?200: 500,
+      message,
+      data: data,
+    })
   })
 }
